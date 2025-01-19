@@ -1,28 +1,24 @@
-name: Deploy Image to IPFS
+name: Deploy to Pinata
 
 on:
   push:
     branches:
-      - main
+      - main  # Le workflow se déclenchera lors de chaque modification poussée sur la branche "main".
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Check out your repository code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3  # Récupère le code du dépôt.
 
-      # Step 2: Install Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      # Step 3: Install ipfs-deploy
-      - name: Install ipfs-deploy
-        run: npm install -g ipfs-deploy
-
-      # Step 4: Deploy the image to IPFS
-      - name: Deploy Chaton.jpeg to IPFS
-        run: ipfs-deploy Chaton.jpeg --pinata-api-key="${{ secrets.PINATA_API_KEY }}" --pinata-secret-api-key="${{ secrets.PINATA_API_SECRET }}"
+    - name: Upload files to Pinata
+      env:
+        PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}  # Vos clés API Pinata.
+        PINATA_SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
+      run: |
+        curl -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS" \
+          -H "pinata_api_key: $PINATA_API_KEY" \
+          -H "pinata_secret_api_key: $PINATA_SECRET_API_KEY" \
+          -F file=@index.html
