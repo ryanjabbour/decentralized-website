@@ -13,13 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Install Node.js and Pinata CLI
-      - name: Setup Node.js and install Pinata CLI
-        run: |
-          npm install -g pinata-cli
-          # Install additional dependencies if needed
+      # Step 2: Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      # Step 3: Deploy Chaton.jpeg to IPFS using Pinata CLI
-      - name: Pin image to IPFS
-        run: |
-          pinata-cli pin ./Chaton.jpeg --api-key="${{ secrets.PINATA_API_KEY }}" --api-secret="${{ secrets.PINATA_API_SECRET }}"
+      # Step 3: Install ipfs-deploy
+      - name: Install ipfs-deploy
+        run: npm install -g ipfs-deploy
+
+      # Step 4: Deploy the image to IPFS
+      - name: Deploy Chaton.jpeg to IPFS
+        run: ipfs-deploy Chaton.jpeg --pinata-api-key="${{ secrets.PINATA_API_KEY }}" --pinata-secret-api-key="${{ secrets.PINATA_API_SECRET }}"
