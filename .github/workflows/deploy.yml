@@ -1,4 +1,4 @@
-name: Deploy to IPFS
+name: Deploy Image to IPFS
 
 on:
   push:
@@ -9,11 +9,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Check out your repository code
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Deploy to Pinata
-      uses: pinata-cloud/ipfs-deploy-action@v2.0
-      with:
-        apiKey: ${{ secrets.PINATA_API_KEY }}
-        apiSecret: ${{ secrets.PINATA_API_SECRET }}
+      # Step 2: Install Node.js (required by ipfs-deploy)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Step 3: Deploy the image to IPFS
+      - name: Deploy Chaton.jpeg to IPFS
+        uses: agentofuser/ipfs-deploy@master
+        with:
+          public-dir: .
+          pinata-api-key: ${{ secrets.PINATA_API_KEY }}
+          pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET }}
