@@ -1,0 +1,19 @@
+name: Deploy to IPFS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Deploy to Pinata
+      uses: pinata-cloud/ipfs-deploy-action@v2.0
+      with:
+        apiKey: ${{ secrets.PINATA_API_KEY }}
+        apiSecret: ${{ secrets.PINATA_API_SECRET }}
