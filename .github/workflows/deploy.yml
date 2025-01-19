@@ -13,16 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Install Node.js (required by ipfs-deploy)
+      # Step 2: Install Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Step 3: Deploy the image to IPFS
+      # Step 3: Install ipfs-deploy
+      - name: Install ipfs-deploy
+        run: npm install -g ipfs-deploy
+
+      # Step 4: Deploy the image to IPFS
       - name: Deploy Chaton.jpeg to IPFS
-        uses: agentofuser/ipfs-deploy@master
-        with:
-          public-dir: .
-          pinata-api-key: ${{ secrets.PINATA_API_KEY }}
-          pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET }}
+        run: ipfs-deploy Chaton.jpeg --pinata-api-key="${{ secrets.PINATA_API_KEY }}" --pinata-secret-api-key="${{ secrets.PINATA_API_SECRET }}"
